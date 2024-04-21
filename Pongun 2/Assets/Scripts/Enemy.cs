@@ -24,7 +24,6 @@ public class Enemy : Paddle
     }
     public Difficulty[] difficulties;
     Difficulty currentDifficulty;
-    public int difficultySelector;
 
     Vector2 ballPosition;
 
@@ -32,9 +31,10 @@ public class Enemy : Paddle
 
     private void Start()
     {
-        currentDifficulty = difficulties[difficultySelector];
+        // Test code
+        //currentDifficulty = difficulties[difficultySelector];
 
-        
+        currentDifficulty = difficulties[MainMenu.EnemyDifficulty];
     }
 
     protected override void OnUpdate()

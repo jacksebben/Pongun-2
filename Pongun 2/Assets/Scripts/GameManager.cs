@@ -48,8 +48,14 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        // Update the ball speed text.
+        // TODO remove; update the ball speed text.  
         ballSpeedText.text = Ball.Instance.GetMaxSpeed().ToString("F2");
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // Exit the game and return to the main menu
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
+        }
     }
 
     IEnumerator StartRound()
