@@ -7162,14 +7162,13 @@ MonoBehaviour:
   outline: {fileID: 841877476}
   difficulties:
   - name: Normal
-    distanceNeededToFollow: 1
-    maxFiringDelay: 1
+    distanceNeededToFollow: 1.2
+    maxFiringDelay: 1.5
     leadingShotInaccuracy: 1
   - name: Expert
     distanceNeededToFollow: 0.01
     maxFiringDelay: 0.2
     leadingShotInaccuracy: 0.01
-  difficultySelector: 1
 --- !u!82 &1787354046
 AudioSource:
   m_ObjectHideFlags: 0

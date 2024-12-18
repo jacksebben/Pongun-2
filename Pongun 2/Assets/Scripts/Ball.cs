@@ -76,7 +76,7 @@ public class Ball : MonoBehaviour
 
     private bool isStarting;
 
-    private void Awake()
+	private void Awake()
     {
         Instance = Instance != null ? Instance : this;
     }
@@ -133,8 +133,6 @@ public class Ball : MonoBehaviour
 
         // Predict the ball's position and point the gun at it
         Vector2 aimPosition = ballPosition + rb.velocity * seconds;
-        float randomInaccuracy = Mathf.Abs(rb.velocity.magnitude) * Random.Range(-inaccuracy, inaccuracy) / 20f;
-        aimPosition += new Vector2(randomInaccuracy, randomInaccuracy);
 
         // If ball is going to bounce off of wall, do some Vector math to predict where it will bounce.
         if (Mathf.Abs(aimPosition.y) > 4.2f)
@@ -145,7 +143,10 @@ public class Ball : MonoBehaviour
             aimPosition = new Vector2(aimPosition.x, aimPosition.y - (2f * (aimPosition.y - bouncePosition.y)));
         }
 
-        return aimPosition;
+		// Apply random inaccuracy to the aim (unit circle between 0-3 depending on inaccuracy arg.)
+        aimPosition += Random.insideUnitCircle * (inaccuracy * 3);
+
+		return aimPosition;
     }
 
     public float GetMaxSpeed()
