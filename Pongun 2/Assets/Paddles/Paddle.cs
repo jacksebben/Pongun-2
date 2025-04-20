@@ -1,16 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Paddle : MonoBehaviour
 {
     protected const float paddleSpeed = 8f;
-    protected const float blinkInterval = 5f;
-    protected const float blinkDuration = 0.1f;
+    protected const float specialInterval = 5f;
+    protected const float specialDuration = 0.1f;
 
     [Header("Audio")]
-    [SerializeField] private AudioClip blinkUse;
+	[SerializeField] private AudioClip specialUse;
 
     [Header("Components")]
     [SerializeField] protected PaddleGun gun;
@@ -20,9 +19,9 @@ public abstract class Paddle : MonoBehaviour
     [SerializeField] private SpriteRenderer outline;
 
     protected bool canAction = false;
-    protected bool canBlink = false;
+    protected bool canSpecial = false;
 
-    protected float lastBlinkTime;
+    protected float lastTimeSpecial;
 
     private bool roundStarting = false;
 
@@ -35,7 +34,7 @@ public abstract class Paddle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!roundStarting && !canAction && Time.time - lastBlinkTime > blinkDuration)
+        if (!roundStarting && !canAction && Time.time - lastTimeSpecial > specialDuration)
         {
             canAction = true;
         }
@@ -43,9 +42,9 @@ public abstract class Paddle : MonoBehaviour
         if (canAction) {
             Fire();
 
-            if (!canBlink && Time.time - lastBlinkTime >= blinkInterval)
+            if (!canSpecial && Time.time - lastTimeSpecial >= specialInterval)
             {
-                EnableBlink(true);
+                EnableSpecial(true);
             }
         }
 
@@ -79,8 +78,8 @@ public abstract class Paddle : MonoBehaviour
         roundStarting = true;
         canAction = false;
 
-        EnableBlink(false, false);
-        lastBlinkTime = Time.time - 1.5f;
+        EnableSpecial(false, false);
+        lastTimeSpecial = Time.time - 1.5f;
 
         rb.velocity = Vector2.zero;
     }
@@ -101,13 +100,13 @@ public abstract class Paddle : MonoBehaviour
     /// </summary>
     protected abstract void Fire();
 
-    protected virtual void EnableBlink(bool enabled, bool playSounds = true)
+    protected virtual void EnableSpecial(bool enabled, bool playSounds = true)
     {
-        canBlink = enabled;
+        canSpecial = enabled;
 
         if (enabled)
         {
-            outline.color = Color.cyan;
+            outline.color = Color.yellow;
         }
         else
         {
@@ -115,22 +114,21 @@ public abstract class Paddle : MonoBehaviour
             canAction = false;
 
             // Update the last blink time.
-            lastBlinkTime = Time.time;
+            lastTimeSpecial = Time.time;
 
             outline.color = Color.black;
         }
     }
 
-    protected void Blink()
+    protected void DoSpecial()
     {
-        if (!canBlink) { return; }
+        if (!canSpecial) { return; }
 
-        EnableBlink(false);
+        if (!Ball.Instance.TryFlipVelocity(transform.position.x < 0 ? -1 : 1))
+            return;
 
-        sounds.PlayOneShot(blinkUse);
+        EnableSpecial(false);
 
-        //  Move the paddle to horizontally aligned with the ball.
-        float ballY = Ball.Instance.GetRigidbody().position.y;
-        rb.MovePosition(new Vector2(rb.position.x, ballY));
+        sounds.PlayOneShot(specialUse);
     }
 }

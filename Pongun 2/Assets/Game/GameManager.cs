@@ -8,9 +8,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     // Spawnpoints
-    readonly Vector3 playerStartPosition = new(12.5f, 0f, 0f);
-    readonly Vector3 enemyStartPosition = new(27.5f, 0f, 0f);
-    readonly Vector3 ballStartPosition = new(20f, 0f, 0f);
+    readonly Vector3 playerStartPosition = new(-7.5f, 0f, 0f);
+    readonly Vector3 enemyStartPosition = new(7.5f, 0f, 0f);
+    readonly Vector3 ballStartPosition = new(0f, 0f, 0f);
     
     [Header("Objects")]
     [SerializeField] private Player player;

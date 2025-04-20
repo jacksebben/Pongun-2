@@ -7,6 +7,9 @@ public class PaddleGun : MonoBehaviour
     const float fireDelay = 0.52f;
     
     [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private AudioClip fireSfx;
+
+    [SerializeField] protected AudioSource sounds;
 
     public Paddle Owner { get; private set; }
 
@@ -47,5 +50,7 @@ public class PaddleGun : MonoBehaviour
         
         // Spawns a bullet at the tip of the gun.
         Instantiate(bulletPrefab, SpawnPosition, transform.rotation).GetComponent<Bullet>().Init(Owner);
+
+        sounds.PlayOneShot(fireSfx);
     }
 }

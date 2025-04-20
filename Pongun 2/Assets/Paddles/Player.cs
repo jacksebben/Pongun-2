@@ -21,7 +21,7 @@ public class Player : Paddle
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Blink();
+            DoSpecial();
         }
     }
 
@@ -40,9 +40,9 @@ public class Player : Paddle
         }
     }
 
-    protected override void EnableBlink(bool enabled, bool playSounds = true)
+    protected override void EnableSpecial(bool enabled, bool playSounds = true)
     {
-        base.EnableBlink(enabled, playSounds);
+        base.EnableSpecial(enabled, playSounds);
 
         if (playSounds)
         {

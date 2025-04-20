@@ -127,6 +127,23 @@ public class Ball : MonoBehaviour
         rb.velocity = new Vector2(Random.Range(-0.5f, 0.5f), randomDirection).normalized * currentMaxSpeed;
     }
 
+    public bool TryFlipVelocity(int sideSign)
+    {
+        int posSign = transform.position.x < 0 ? -1 : 1;
+		//int velSign = rb.GetPointVelocity(transform.position).x < 0 ? -1 : 1;
+		int velSign = rb.velocity.x < 0 ? -1 : 1;
+
+		if (posSign != velSign || posSign != sideSign)
+            return false;
+        
+        Vector3 newVel = rb.velocity;
+        newVel.x *= -1;
+        newVel.y *= -1;
+        rb.velocity = newVel;
+
+        return true;
+    }
+
     public Vector2 PositionAfterSeconds(float seconds, float inaccuracy = 0f)
     {
         Vector2 ballPosition = rb.position;

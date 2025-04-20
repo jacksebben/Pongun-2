@@ -47,11 +47,11 @@ public class Enemy : Paddle
         gun.PointGunAtPosition(aimPosition);
 
         // If the ball is far away enough, vertically, but close enough, horizontally, then blink.
-        if (Mathf.Abs(ballPosition.y - rb.position.y) > 1f
-            && Mathf.Abs(ballPosition.x - rb.position.x) < 1f)
-        {
-            Blink();
-        }
+        //if (Mathf.Abs(ballPosition.y - rb.position.y) > 1f
+        //    && Mathf.Abs(ballPosition.x - rb.position.x) < 1f)
+        //{
+        //    DoSpecial();
+        //}
     }
 
     public override void Actionable()
