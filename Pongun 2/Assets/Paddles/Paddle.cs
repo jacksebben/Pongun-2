@@ -23,16 +23,20 @@ public abstract class Paddle : MonoBehaviour
 
     protected float lastTimeSpecial;
 
+    protected float distFromCenter;
+
     private bool roundStarting = false;
 
-    private void Awake()
+    protected void Awake()
     {
         // Initialize the paddle's gun.
         gun.Init(this);
+
+        distFromCenter = 8;
     }
 
     // Update is called once per frame
-    void Update()
+    protected void Update()
     {
         if (!roundStarting && !canAction && Time.time - lastTimeSpecial > specialDuration)
         {
@@ -53,7 +57,7 @@ public abstract class Paddle : MonoBehaviour
 
     protected virtual void OnUpdate() { }
 
-    void FixedUpdate()
+    protected void FixedUpdate()
     {
         if (canAction) {
             Move();
@@ -84,16 +88,26 @@ public abstract class Paddle : MonoBehaviour
         rb.velocity = Vector2.zero;
     }
 
+    public void SetDistFromCenter(float _dist)
+    {
+        distFromCenter -= _dist;
+    }
+
     public virtual void Actionable()
     {
         roundStarting = false;
         canAction = true;
     }
 
-    /// <summary>
-    /// Move the paddle. This is called in FixedUpdate, and is implemented in child classes.
-    /// </summary>
-    protected abstract void Move();
+	/// <summary>
+	/// Move the paddle. This is called in FixedUpdate, and is implemented in child classes.
+	/// </summary>
+	protected abstract void Move();
+
+    protected void Zoom(float newX)
+    {
+        distFromCenter = newX;
+    }
 
     /// <summary>
     /// Fire the paddle's gun.

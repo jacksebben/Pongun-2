@@ -70,11 +70,13 @@ public class Enemy : Paddle
         if (Mathf.Abs(verticalDistance) > currentDifficulty.distanceNeededToFollow)
         {
             // Have the rigidbody follow y-position of the ball at a certain speed.
-            rb.MovePosition(rb.position + (paddleSpeed * Time.fixedDeltaTime * new Vector2(0f, verticalDistance).normalized));
+            Vector3 newPos = rb.position + (paddleSpeed * Time.fixedDeltaTime * new Vector2(0f, verticalDistance).normalized);
+            newPos.x = distFromCenter;
+			rb.MovePosition(newPos);
         }
     }
 
-    protected override void Fire()
+	protected override void Fire()
     {
         if (Time.time - fireableTimepoint < 0) { return; }
 

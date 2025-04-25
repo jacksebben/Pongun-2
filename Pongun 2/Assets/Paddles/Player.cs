@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 public class Player : Paddle
-{
+{   
     [Header("Audio")]
     [SerializeField] private AudioClip blinkReady;
     
@@ -28,10 +28,13 @@ public class Player : Paddle
     protected override void Move()
     {
         // Use the paddle's rigidbody to move the paddle.
-        rb.MovePosition(rb.position + (paddleSpeed * Time.fixedDeltaTime * inputDirection));
+        Vector3 newPos = rb.position + (paddleSpeed * Time.fixedDeltaTime * inputDirection);
+        newPos.x = -distFromCenter;
+
+		rb.MovePosition(newPos);
     }
 
-    protected override void Fire()
+	protected override void Fire()
     {
         // When click, fire the gun.
         if (Input.GetMouseButtonDown(0))

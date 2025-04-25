@@ -7,10 +7,14 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    // Spawnpoints
-    readonly Vector3 playerStartPosition = new(-7.5f, 0f, 0f);
-    readonly Vector3 enemyStartPosition = new(7.5f, 0f, 0f);
-    readonly Vector3 ballStartPosition = new(0f, 0f, 0f);
+    const float paddleInitialDist = 8;
+
+	// Spawnpoints
+	readonly Vector3 playerStartPosition = new(-paddleInitialDist, 0f, 0f);
+	readonly Vector3 enemyStartPosition = new(paddleInitialDist, 0f, 0f);
+
+	const float envInitialZoom = 5;
+    float currentZoomMult;
     
     [Header("Objects")]
     [SerializeField] private Player player;
@@ -22,10 +26,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text ballSpeedText;
     [SerializeField] private TMP_Text speedIncreaseText;
 
-    private int playerScore;
+    [Header("Environment")]
+    [SerializeField] private Camera cam;
+    [SerializeField] private GameObject topBorder;
+	[SerializeField] private GameObject bottomBorder;
+
+	private int playerScore;
     private int enemyScore;
 
-    private void Awake()
+    private bool gameActionable = false;
+
+    protected void Awake()
     {
         Instance = Instance != null ? Instance : this;
 
@@ -36,7 +47,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         // Reset the scores.
         playerScore = 0;
@@ -46,7 +57,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(StartRound());
     }
 
-    private void Update()
+    protected void Update()
     {
         // TODO remove; update the ball speed text.  
         ballSpeedText.text = Ball.Instance.GetMaxSpeed().ToString("F2");
@@ -55,6 +66,22 @@ public class GameManager : MonoBehaviour
         {
             // Exit the game and return to the main menu
             UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
+        }
+
+        if (gameActionable)
+        {
+            currentZoomMult += 0.08f * Time.deltaTime;
+            float environmentZoom = envInitialZoom * currentZoomMult;
+            float paddleZoom = paddleInitialDist * currentZoomMult;
+
+			cam.orthographicSize = environmentZoom;
+            
+			topBorder.transform.position = envInitialZoom * Vector2.up;
+            bottomBorder.transform.position = envInitialZoom * Vector2.down;
+
+            // Zoom for players
+            player.SetDistFromCenter(paddleInitialDist * currentZoomMult);
+            enemy.SetDistFromCenter(paddleInitialDist * currentZoomMult);
         }
     }
 
@@ -76,7 +103,10 @@ public class GameManager : MonoBehaviour
         // Reset the player and enemy positions.
         player.transform.position = playerStartPosition;
         enemy.transform.position = enemyStartPosition;
-        Ball.Instance.transform.position = ballStartPosition;
+        Ball.Instance.transform.position = Vector3.zero;
+
+        // Reset size
+        currentZoomMult = 1;
 
         // Wait a second before starting the round.
         yield return new WaitForSeconds(1f);
@@ -85,6 +115,8 @@ public class GameManager : MonoBehaviour
 
     void StartActionable()
     {
+        gameActionable = true;
+        
         // Enable the player and enemy moving/shoting.
         player.Actionable();
         enemy.Actionable();
